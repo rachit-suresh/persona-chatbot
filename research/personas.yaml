@@ -1,0 +1,32 @@
+personas:
+  - id: anshuman-singh
+    name: Anshuman Singh
+    search_terms:
+      - Anshuman Singh Scaler LinkedIn
+      - Anshuman Singh InterviewBit Facebook Messenger
+      - Anshuman Singh Scaler article skills degrees
+    manual_urls:
+      linkedin: https://in.linkedin.com/in/anshumansingh26
+      iiit_hyderabad: https://www.iiit.ac.in/scaler/
+      company_profile: https://hackernoon.com/company/interviewbit
+
+  - id: abhimanyu-saxena
+    name: Abhimanyu Saxena
+    search_terms:
+      - Abhimanyu Saxena Scaler InterviewBit LinkedIn
+      - Abhimanyu Saxena Scaler education system interview
+      - Abhimanyu Saxena startup growth mindset
+    manual_urls:
+      techgraph_interview: https://techgraph.co/interviews/abhimanyu-saxena-scaler-academy-ed-tech-sector-has-been-a-silver-lining/
+      collegedunia_interview: https://collegedunia.com/articles/i-40960-interview-mr-abhimanyu-saxena-co-founder-at-scaler-and-interviewbit-karnataka
+      yourstory_profile: https://yourstory.com/ys-life/rapid-fire-with-abhimanyu-saxena-co-founder-scaler-interviewbit
+
+  - id: kshitij-mishra
+    name: Kshitij Mishra
+    search_terms:
+      - Kshitij Mishra Scaler LinkedIn
+      - Kshitij Mishra Scaler School of Technology AI business
+      - Kshitij Mishra InterviewBit lead engineer
+    manual_urls:
+      linkedin: https://in.linkedin.com/in/kshitij-mishra-a5779334
+      linkedin_post_ai_business: https://www.linkedin.com/posts/kshitij-mishra-a5779334_in-2017-i-joined-interviewbit-as-a-lead-activity-7434271548192018433-mqW2
