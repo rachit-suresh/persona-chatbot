@@ -10,7 +10,12 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+function normalizeApiBaseUrl(value) {
+  return String(value || "").trim().replace(/\/$/, "");
+}
+
+const ENV_API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
+const DEFAULT_API_BASE_URL = import.meta.env.DEV ? "http://localhost:8000" : "";
 
 const fallbackPersonas = [
   {
@@ -83,6 +88,12 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState("");
   const [model, setModel] = useState("gemini-3.1-flash-lite-preview");
+  const [apiBaseUrl, setApiBaseUrl] = useState(() => {
+    const saved = window.localStorage?.getItem("persona-api-base-url");
+    return normalizeApiBaseUrl(saved || ENV_API_BASE_URL || DEFAULT_API_BASE_URL);
+  });
+  const [apiDraft, setApiDraft] = useState(apiBaseUrl);
+  const [backendStatus, setBackendStatus] = useState("checking");
   const endRef = useRef(null);
 
   const activePersona = useMemo(
@@ -93,10 +104,17 @@ function App() {
 
   useEffect(() => {
     async function loadPersonas() {
+      if (!apiBaseUrl) {
+        setBackendStatus("missing");
+        setError("Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.");
+        return;
+      }
+
+      setBackendStatus("checking");
       try {
-        const response = await fetch(`${API_BASE_URL}/api/personas`);
+        const response = await fetch(`${apiBaseUrl}/api/personas`);
         if (!response.ok) {
-          throw new Error("Could not load personas");
+          throw new Error(`Backend returned HTTP ${response.status}`);
         }
         const data = await response.json();
         if (Array.isArray(data.personas) && data.personas.length > 0) {
@@ -106,13 +124,18 @@ function App() {
         if (data.model) {
           setModel(data.model);
         }
-      } catch {
-        setError("Using local persona previews until the backend is available.");
+        setError("");
+        setBackendStatus("connected");
+      } catch (requestError) {
+        setBackendStatus("offline");
+        setError(
+          `Backend unreachable at ${apiBaseUrl}. Check Vercel VITE_API_BASE_URL, Render health, and Render FRONTEND_ORIGIN. ${requestError.message}`
+        );
       }
     }
 
     loadPersonas();
-  }, []);
+  }, [apiBaseUrl]);
 
   useEffect(() => {
     if (typeof endRef.current?.scrollIntoView === "function") {
@@ -136,6 +159,11 @@ function App() {
   async function sendMessage(text = input) {
     const content = text.trim();
     if (!content || isTyping) return;
+
+    if (!apiBaseUrl) {
+      setError("Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.");
+      return;
+    }
 
     const nextMessages = [...messages, { role: "user", content }];
     setMessages(nextMessages);
