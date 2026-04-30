@@ -84,4 +84,3 @@ python scripts/research_personas.py
 ```
 
 With `SERPAPI_API_KEY`, it also records Google-style search results. Without it, the script uses the manual URLs in the YAML file.
-

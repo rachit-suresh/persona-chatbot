@@ -11,7 +11,9 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 
 function normalizeApiBaseUrl(value) {
-  return String(value || "").trim().replace(/\/$/, "");
+  return String(value || "")
+    .trim()
+    .replace(/\/$/, "");
 }
 
 const ENV_API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
@@ -82,7 +84,9 @@ const personaVisuals = {
 
 function App() {
   const [personas, setPersonas] = useState(fallbackPersonas);
-  const [activePersonaId, setActivePersonaId] = useState(fallbackPersonas[0].id);
+  const [activePersonaId, setActivePersonaId] = useState(
+    fallbackPersonas[0].id,
+  );
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -90,23 +94,29 @@ function App() {
   const [model, setModel] = useState("gemini-3.1-flash-lite-preview");
   const [apiBaseUrl, setApiBaseUrl] = useState(() => {
     const saved = window.localStorage?.getItem("persona-api-base-url");
-    return normalizeApiBaseUrl(saved || ENV_API_BASE_URL || DEFAULT_API_BASE_URL);
+    return normalizeApiBaseUrl(
+      saved || ENV_API_BASE_URL || DEFAULT_API_BASE_URL,
+    );
   });
   const [apiDraft, setApiDraft] = useState(apiBaseUrl);
   const [backendStatus, setBackendStatus] = useState("checking");
   const endRef = useRef(null);
 
   const activePersona = useMemo(
-    () => personas.find((persona) => persona.id === activePersonaId) || personas[0],
-    [activePersonaId, personas]
+    () =>
+      personas.find((persona) => persona.id === activePersonaId) || personas[0],
+    [activePersonaId, personas],
   );
-  const activeVisual = personaVisuals[activePersona.id] || personaVisuals["anshuman-singh"];
+  const activeVisual =
+    personaVisuals[activePersona.id] || personaVisuals["anshuman-singh"];
 
   useEffect(() => {
     async function loadPersonas() {
       if (!apiBaseUrl) {
         setBackendStatus("missing");
-        setError("Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.");
+        setError(
+          "Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.",
+        );
         return;
       }
 
@@ -129,7 +139,7 @@ function App() {
       } catch (requestError) {
         setBackendStatus("offline");
         setError(
-          `Backend unreachable at ${apiBaseUrl}. Check Vercel VITE_API_BASE_URL, Render health, and Render FRONTEND_ORIGIN. ${requestError.message}`
+          `Backend unreachable at ${apiBaseUrl}. Check Vercel VITE_API_BASE_URL, Render health, and Render FRONTEND_ORIGIN. ${requestError.message}`,
         );
       }
     }
@@ -161,7 +171,9 @@ function App() {
     if (!content || isTyping) return;
 
     if (!apiBaseUrl) {
-      setError("Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.");
+      setError(
+        "Backend URL is missing. Add VITE_API_BASE_URL in Vercel, then redeploy.",
+      );
       return;
     }
 
@@ -182,9 +194,14 @@ function App() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.detail || "The chatbot could not answer right now.");
+        throw new Error(
+          data.detail || "The chatbot could not answer right now.",
+        );
       }
-      setMessages([...nextMessages, { role: "assistant", content: data.reply }]);
+      setMessages([
+        ...nextMessages,
+        { role: "assistant", content: data.reply },
+      ]);
     } catch (requestError) {
       setError(requestError.message);
       setMessages(nextMessages);
@@ -200,7 +217,10 @@ function App() {
 
   return (
     <main className="app-shell">
-      <section className={`workspace theme-${activeVisual.color}`} aria-label="Persona chatbot">
+      <section
+        className={`workspace theme-${activeVisual.color}`}
+        aria-label="Persona chatbot"
+      >
         <aside className="persona-panel" aria-label="Persona switcher">
           <div className="brand-row">
             <span className="brand-mark" aria-hidden="true">
@@ -219,7 +239,8 @@ function App() {
 
           <div className="persona-list" role="tablist" aria-label="Personas">
             {personas.map((persona, index) => {
-              const visual = personaVisuals[persona.id] || personaVisuals["anshuman-singh"];
+              const visual =
+                personaVisuals[persona.id] || personaVisuals["anshuman-singh"];
               return (
                 <button
                   className={`persona-tab persona-${index + 1} ${persona.id === activePersona.id ? "active" : ""}`}
@@ -244,7 +265,12 @@ function App() {
               <h2>{activePersona.name}</h2>
               <p>{activePersona.role}</p>
             </div>
-            <button className="icon-button" onClick={resetChat} aria-label="Reset chat" title="Reset chat">
+            <button
+              className="icon-button"
+              onClick={resetChat}
+              aria-label="Reset chat"
+              title="Reset chat"
+            >
               <RefreshCw size={18} />
             </button>
           </header>
@@ -254,14 +280,20 @@ function App() {
               <Sparkles size={20} aria-hidden="true" />
               <span>{activePersona.bio}</span>
             </div>
-            <div className="trait-strip" aria-label={`${activePersona.name} traits`}>
+            <div
+              className="trait-strip"
+              aria-label={`${activePersona.name} traits`}
+            >
               {activeVisual.traits.map((trait) => (
                 <span key={trait}>{trait}</span>
               ))}
             </div>
           </div>
 
-          <div className="suggestions" aria-label={`${activePersona.name} suggestions`}>
+          <div
+            className="suggestions"
+            aria-label={`${activePersona.name} suggestions`}
+          >
             {activePersona.suggestions.map((suggestion) => (
               <button key={suggestion} onClick={() => sendMessage(suggestion)}>
                 {suggestion}
@@ -296,8 +328,13 @@ function App() {
               </div>
             ) : (
               messages.map((message, index) => (
-                <article className={`message ${message.role}`} key={`${message.role}-${index}`}>
-                  <span>{message.role === "user" ? "You" : activePersona.name}</span>
+                <article
+                  className={`message ${message.role}`}
+                  key={`${message.role}-${index}`}
+                >
+                  <span>
+                    {message.role === "user" ? "You" : activePersona.name}
+                  </span>
                   <p>{message.content}</p>
                 </article>
               ))
@@ -325,7 +362,11 @@ function App() {
               placeholder={`Message ${activePersona.name}`}
               rows={1}
             />
-            <button type="submit" disabled={isTyping || !input.trim()} aria-label="Send message">
+            <button
+              type="submit"
+              disabled={isTyping || !input.trim()}
+              aria-label="Send message"
+            >
               <Send size={18} />
               <span>Send</span>
             </button>
