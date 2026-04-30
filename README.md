@@ -55,6 +55,8 @@ npm run dev
 
 Open `http://localhost:5173`.
 
+For Vercel, set `VITE_API_BASE_URL` to your Render backend URL so the deployed frontend can reach the API.
+
 ## Tests
 
 Backend:
