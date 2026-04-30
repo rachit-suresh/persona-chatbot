@@ -83,34 +83,3 @@ python scripts/research_personas.py
 
 With `SERPAPI_API_KEY`, it also records Google-style search results. Without it, the script uses the manual URLs in the YAML file.
 
-## Deployment
-
-### Backend on Render
-
-1. Push this repository to GitHub.
-2. Create a Render web service using `render.yaml` or set:
-   - Root directory: `backend`
-   - Build command: `pip install -r requirements.txt`
-   - Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-3. Add environment variables:
-   - `GEMINI_API_KEY`
-   - `GEMINI_MODEL=gemini-3.1-flash-lite-preview`
-   - `GEMINI_REASONING_EFFORT=low`
-   - `OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/`
-   - `FRONTEND_ORIGIN=https://your-vercel-domain.vercel.app`
-
-### Frontend on Vercel
-
-1. Import the same GitHub repo in Vercel.
-2. Set the root directory to `frontend`.
-3. Add `VITE_API_BASE_URL=https://your-render-service.onrender.com`.
-4. Deploy and paste the Vercel URL into this README before submission.
-
-## Submission Checklist
-
-- Public GitHub repo link:
-- Live project URL:
-- Backend URL:
-- Screenshot path:
-
-Before submitting, verify that all three personas work in production, persona switching resets the conversation, API errors do not crash the UI, and no real API key is committed.
